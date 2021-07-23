@@ -1,0 +1,116 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Agents {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div class="header-body">
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt--7">
+      {% if admin %}
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-4">
+                  <h3 class="mb-0">Agents</h3>
+                </div>
+                <div class="col-8 text-right">
+                  <a href="{% url 'add_agents' %}" class="btn btn-info">Add New Agent</a>
+                </div>
+                <div class="col-12 col-md-6 mx-auto py-5" style="overflow:auto;">
+
+                  <form method="GET" action="{% url 'search' %}" class="form my-2 my-lg-0"  >
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Search Agents"  name="q" value="">
+                  <span class="input-group-btn">
+                  <button class="btn btn-info" type="submit" >Search</button>
+                  </span>
+                    </div>
+                  </form>
+        
+            </div>
+              </div>
+              {% if delete %}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: 50px 0;">
+                <strong>{{object.email}}</strong> deleted succesfully.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <div class="row icon-examples">
+                {% for agent in agents %}
+                <div class="btn-group" style="margin: 25px;">
+                  <button type="button" class="btn btn-secondary btn-lg">{{agent.email}}
+                  </button>
+                  <button type="button" class="btn btn-lg btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'agent_detail' agent.pk %}">View Agent Details</a>
+                    <a class="dropdown-item" href="{% url 'agent_update' agent.pk %}">Update Agent Details</a>
+                    <a class="dropdown-item" href="{% url 'agent_password_change' agent.pk %}">Update Agent Password</a>
+                    <a class="dropdown-item" href="{% url 'agent_delete' agent.pk %}">Delete Agent Account</a>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% if agents.has_other_pages %}
+            <div class="container p-4">
+              <div class="pagination justify-content-center">
+                <span class="step-links">
+                  {% if agents.has_previous %}
+                  <a href="?page={{ agents.previous_page_number }}">Previous</a>
+                  {% endif %}
+                  <span class="current">
+                    Page {{ agents.number }} of {{ agents.paginator.num_pages }}
+                  </span>
+                  {% if agents.has_next %}
+                  <a href="?page={{ agents.next_page_number }}">Next</a>
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-white border-0">
+        <strong>You don't have permission</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+      {% endif %}
+
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
